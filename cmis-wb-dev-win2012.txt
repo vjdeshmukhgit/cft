@@ -1,0 +1,111 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: CMIS Dev Windows Server 2012 R2 instance
+
+Mappings:
+ constants:
+
+#pick your subnet
+   subnets:
+       subnet1: subnet-e68c7baf
+
+#These are the 5 approved AMI's
+   amis:
+       winami: ami-57d78741 #approved Windows 2012 R2 x64 AMI
+       
+
+#Default OS launch keys
+   keys:
+       winlaunchKey: gss-win
+       #rhllaunchKey:
+       #cenlaunchKey:
+       #ubnlaunchKey:
+
+#Pick an instance type
+   instancetypes:
+       type: t2.medium
+
+#use IPAddresses if there is a need for static IPs
+   #IPAddresses:
+       #ipadd1: 10.78.4.6
+       #ipadd2: 10.193.244.93
+
+#Use Role if you need to use an existing IAM role
+   #Role:
+       #rolename: uscis-stars-backup
+
+#There are 5 mandatory tags below.  Be sure to change them to reflect the correct team/info
+   Tags:
+   
+       Name: AWE-CMIS-WEB-01
+       ServerFunction: Web Server
+       System: CMIS / GSS
+       FismaID: CIS-07425-MAJ-07425
+       Environment: DEV
+
+# NOTE = There will eventually be a mandatory default security group for all instances
+   SecurityGroups:
+       Group: [sg-a204ccd2]
+
+Resources:
+  CMISDevWebServer01:
+   Type: "AWS::EC2::Instance"
+   Properties:
+     SubnetId: !FindInMap [constants, subnets, subnet1]
+     SecurityGroupIds: !FindInMap [constants, SecurityGroups, Group] #Reference to existing SGs
+     ImageId:  !FindInMap [constants, amis, winami]
+     InstanceType: !FindInMap [constants, instancetypes, type]
+     #PrivateIpAddress: !FindInMap [constants, IPAddresses, ipadd1] #use IPAddresses if there is a need for static IPs
+     #IamInstanceProfile: !FindInMap [constants, Role, rolename]  #use Role if there is a need for a role to be attached to instance
+     KeyName: !FindInMap [constants, keys, winlaunchKey]
+
+     Tags:
+      - Key: Name
+        Value: !Join [ "-", [!FindInMap [constants, Tags, Name],]]
+      - Key: Server_Function
+        Value: !Join [ "-", [!FindInMap [constants, Tags, ServerFunction],]]
+      - Key: System
+        Value: !Join [ "-", [!FindInMap [constants, Tags, System],]]
+      - Key: Fisma_ID
+        Value: !Join [ "-", [!FindInMap [constants, Tags, FismaID],]]
+      - Key: Environment
+        Value: !Join [ "-", [!FindInMap [constants, Tags, Environment],]]
+
+     BlockDeviceMappings:
+       - DeviceName: /dev/sda1
+         Ebs: #ROOT volume
+           VolumeType: gp2
+           VolumeSize: 60
+
+       - DeviceName: xvdf
+         Ebs: #DATA volume
+           VolumeType: gp2
+           VolumeSize: 60
+           DeleteOnTermination: false
+
+     UserData:
+        'Fn::Base64': !Sub |
+          <powershell>
+          Start-Sleep -s 60
+          Set-Partition -DriveLetter D -NewDriveLetter L
+          Set-Partition -DriveLetter E -NewDriveLetter D
+          Set-Volume -DriveLetter L -NewFileSystemLabel "LOGS"
+          Set-Volume -DriveLetter D -NewFileSystemLabel "DATA"
+          Set-Volume -DriveLetter C -NewFileSystemLabel "ROOT"
+          Rename-Computer -NewName AWE-CMIS-WEB-01
+          $ec2id = Invoke-RestMethod -uri "http://169.254.169.254/latest/meta-data/instance-id"
+          $rootvol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=/dev/sda1" --query "Volumes[].VolumeId" --out text
+          $datavol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=xvdf" --query "Volumes[].VolumeId" --out text
+          $logvol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=xvdg" --query "Volumes[].VolumeId" --out text
+          aws ec2 create-tags --resources $rootvol --tags "Key=Name, Value=ROOT Volume for $ec2id"
+          aws ec2 create-tags --resources $datavol --tags "Key=Name, Value=DATA Volume for $ec2id"
+          aws ec2 create-tags --resources $logvol --tags "Key=Name, Value=LOG Volume for $ec2id"
+          </powershell>
+#set-itemproperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -name ProxyEnable -value 0
+#Restart-Computer -Force
+
+Outputs:
+ CMISDevWebServer01:
+   Description: InstanceId
+   Value: !Ref CMISDevWebServer01
+#EOF
