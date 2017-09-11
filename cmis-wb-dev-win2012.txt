@@ -81,7 +81,7 @@ Resources:
          Ebs: #DATA volume
            VolumeType: gp2
            VolumeSize: 60
-           DeleteOnTermination: false
+           DeleteOnTermination: true
 
      UserData:
         'Fn::Base64': !Sub |
