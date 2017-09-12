@@ -37,7 +37,7 @@ Mappings:
 #There are 5 mandatory tags below.  Be sure to change them to reflect the correct team/info
    Tags:
    
-       Name: AWE-CMIS-WEB-03
+       Name: AWE-ChefClient-01
        ServerFunction: Web Server
        System: CMIS / GSS
        FismaID: CIS-07425-MAJ-07425
