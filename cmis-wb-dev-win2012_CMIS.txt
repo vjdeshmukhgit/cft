@@ -40,7 +40,7 @@ Mappings:
        Name: AWE-CMIS-DEV-SQL-01
        ServerFunction: SQL Server
        System: CMIS / Non-Prod
-       #FismaID: CIS-07425-MAJ-07425
+       FismaID: CIS-07425-MAJ-07425
        Environment: DEV
 
 # NOTE = There will eventually be a mandatory default security group for all instances
