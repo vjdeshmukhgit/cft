@@ -7,7 +7,7 @@ Mappings:
 
 #pick your subnet
    subnets:
-       subnet1: jets-crm-nonprod-us-east-1c
+       subnet1: subnet-f5e00bbc
 
 #These are the 5 approved AMI's
    amis:
