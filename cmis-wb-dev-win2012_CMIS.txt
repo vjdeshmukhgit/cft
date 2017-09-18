@@ -45,7 +45,7 @@ Mappings:
 
 # NOTE = There will eventually be a mandatory default security group for all instances
    SecurityGroups:
-       Group: [sg-b94a82ca]
+       Group: [sg-d6e735a5]
 
 Resources:
   CMISDevSQLServer01:
