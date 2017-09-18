@@ -7,7 +7,7 @@ Mappings:
 
 #pick your subnet
    subnets:
-       subnet1: subnet-f5e00bbc
+       subnet1: subnet-ffd2779b 
 
 #These are the 5 approved AMI's
    amis:
@@ -37,8 +37,8 @@ Mappings:
 #There are 5 mandatory tags below.  Be sure to change them to reflect the correct team/info
    Tags:
    
-       Name: AWE-CMIS-DEV-SQL-01
-       ServerFunction: SQL Server
+       Name: AWE-CMIS-D-SQL
+       ServerFunction: SQL Server 2014
        System: CMIS / Non-Prod
        FismaID: CIS-07425-MAJ-07425
        Environment: DEV
@@ -92,7 +92,7 @@ Resources:
           Set-Volume -DriveLetter L -NewFileSystemLabel "LOGS"
           Set-Volume -DriveLetter D -NewFileSystemLabel "DATA"
           Set-Volume -DriveLetter C -NewFileSystemLabel "ROOT"
-          Rename-Computer -NewName AWE-CMIS-DEV-SQL-01
+          Rename-Computer -NewName AWE-CMIS-D-SQL
           $ec2id = Invoke-RestMethod -uri "http://169.254.169.254/latest/meta-data/instance-id"
           $rootvol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=/dev/sda1" --query "Volumes[].VolumeId" --out text
           $datavol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=xvdf" --query "Volumes[].VolumeId" --out text
