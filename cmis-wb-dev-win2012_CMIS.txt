@@ -37,8 +37,8 @@ Mappings:
 #There are 5 mandatory tags below.  Be sure to change them to reflect the correct team/info
    Tags:
    
-       Name: AWE-CMIS-D-SQL
-       ServerFunction: SQL Server 2014
+       Name: AWE-CMIS-D-WEB
+       ServerFunction: Web Server
        System: CMIS / Non-Prod
        FismaID: CIS-07425-MAJ-07425
        Environment: DEV
@@ -48,7 +48,7 @@ Mappings:
        Group: [sg-d6e735a5]
 
 Resources:
-  CMISDevSQLServer01:
+  CMISDevWebServer01:
    Type: "AWS::EC2::Instance"
    Properties:
      SubnetId: !FindInMap [constants, subnets, subnet1]
@@ -107,5 +107,5 @@ Resources:
 Outputs:
  CMISDevWebServer01:
    Description: InstanceId
-   Value: !Ref CMISDevSQLServer01
+   Value: !Ref CMISDevWebServer01
 #EOF
