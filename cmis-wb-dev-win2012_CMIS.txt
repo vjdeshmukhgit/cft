@@ -48,7 +48,7 @@ Mappings:
        Group: [sg-d6e735a5]
 
 Resources:
-  CMISDevWebServer02:
+  CMISDevWebServer01:
    Type: "AWS::EC2::Instance"
    Properties:
      SubnetId: !FindInMap [constants, subnets, subnet1]
