@@ -48,7 +48,7 @@ Mappings:
        Group: [sg-d6e735a5]
 
 Resources:
-  CMISDevWebServer01:
+  CMISDevWebServer02:
    Type: "AWS::EC2::Instance"
    Properties:
      SubnetId: !FindInMap [constants, subnets, subnet1]
@@ -105,7 +105,7 @@ Resources:
 #Restart-Computer -Force
 
 Outputs:
- CMISDevWebServer01:
+ CMISDevWebServer02:
    Description: InstanceId
-   Value: !Ref CMISDevWebServer01
+   Value: !Ref CMISDevWebServer02
 #EOF
