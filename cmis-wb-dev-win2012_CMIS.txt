@@ -37,7 +37,7 @@ Mappings:
 #There are 5 mandatory tags below.  Be sure to change them to reflect the correct team/info
    Tags:
    
-       Name: AWE-CMIS-D-WB2
+       Name: AWE-CMIS-D-WB3
        ServerFunction: Web Server
        System: CMIS / Non-Prod
        FismaID: CIS-00148-MAJ-00148
@@ -92,7 +92,7 @@ Resources:
           Set-Volume -DriveLetter L -NewFileSystemLabel "LOGS"
           Set-Volume -DriveLetter D -NewFileSystemLabel "DATA"
           Set-Volume -DriveLetter C -NewFileSystemLabel "ROOT"
-          Rename-Computer -NewName AWE-CMIS-D-WB2
+          Rename-Computer -NewName AWE-CMIS-D-WB3
           $ec2id = Invoke-RestMethod -uri "http://169.254.169.254/latest/meta-data/instance-id"
           $rootvol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=/dev/sda1" --query "Volumes[].VolumeId" --out text
           $datavol = aws ec2 describe-volumes --filters "Name=attachment.instance-id, Values=$ec2id","Name=attachment.device, Values=xvdf" --query "Volumes[].VolumeId" --out text
@@ -105,7 +105,7 @@ Resources:
 #Restart-Computer -Force
 
 Outputs:
- CMISDevWebServer02:
+ CMISDevWebServer03:
    Description: InstanceId
-   Value: !Ref CMISDevWebServer02
+   Value: !Ref CMISDevWebServer03
 #EOF
